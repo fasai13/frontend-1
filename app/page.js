@@ -1,7 +1,16 @@
+import Image from "next/image";
+import Link from "next/link";
+import Carousel from "./components/carousel";
+import Footer from "./components/footers";
+import Cards from "./components/card";
+
+
+
 export default function Home() {
   return (
-    <>
-    <h1 className="ftext-4xl text-center text-bule-950">Home page</h1>
-    </>
+     <div>
+      <Carousel />
+      <Cards />
+    </div>
   );
 }
