@@ -11,13 +11,13 @@ export default function Carousel(){
 
   <div className="carousel-inner">
     <div className="carousel-item active">
-      <img src="/images/card1.jpg" className="d-block w-100" alt="Slide 1"  style={{ height: "100%", objectFit: "cover" }} />
+      <img src="/images/card1.1.jpg" className="d-block w-100" alt="Slide 1"  style={{ height: "100%", objectFit: "cover" }} />
     </div>
     <div className="carousel-item">
-      <img src="/images/card2.jpg" className="d-block w-100" alt="Slide 2"  style={{ height: "100%", objectFit: "cover" }}/>
+      <img src="/images/card2.1.jpg" className="d-block w-100" alt="Slide 2"  style={{ height: "100%", objectFit: "cover" }}/>
     </div>
     <div className="carousel-item">
-      <img src="/images/card3.jpg" className="d-block w-100" alt="Slide 3"  style={{ height: "100%", objectFit: "cover" }}/>
+      <img src="/images/card3.1.jpg" className="d-block w-100" alt="Slide 3"  style={{ height: "100%", objectFit: "cover" }}/>
     </div>
   </div>
 

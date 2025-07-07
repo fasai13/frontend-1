@@ -11,7 +11,7 @@ export default function Cards(){
         <div className="col-md-4 mb-4">
           <div className="card" style={{ width: '18rem' }}>
             <img
-              src="/images/card1.jpg"
+              src="/images/card1.1.jpg"
               className="card-img-top"
               alt="Card 1"
             />
@@ -24,7 +24,7 @@ export default function Cards(){
         <div className="col-md-4 mb-4">
           <div className="card" style={{ width: '18rem' }}>
             <img
-              src="/images/card2.jpg"
+              src="/images/card2.1.jpg"
               className="card-img-top"
               alt="Card 2"
             />
@@ -37,7 +37,7 @@ export default function Cards(){
         <div className="col-md-4 mb-4">
           <div className="card" style={{ width: '18rem' }}>
             <img
-              src="/images/card3.jpg"
+              src="/images/card3.1.jpg"
               className="card-img-top"
               alt="Card 3"
             />
