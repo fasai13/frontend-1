@@ -1,8 +1,8 @@
 // app/layout.js
-
+import './globals.css';
 import { Geist } from 'next/font/google';
 import { Prompt } from 'next/font/google';
-import Navigation from './components/navigation';
+import Navbar from './components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Footer from './components/footers';
@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
     <html lang="th">
       <body className={prompt.className}>
         <Effect />
-        <Navigation />
+        <Navbar />
         {children}
         <Footer />
       </body>
