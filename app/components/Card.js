@@ -14,30 +14,32 @@ export default function Card(){
     };
     
     const cards = [
-        {
-            image: "/images/card-1.jpg",
-            title: "Sweet Dreams",
-            description: "Discover our delightful collection",
-            gradient: "linear-gradient(to bottom, #ffe6f2, #fff)",
-            titleColor: "#d291bc",
-            buttonColor: "#d291bc"
-        },
-        {
-            image: "/images/card-2.jpg",
-            title: "Lavender Love",
-            description: "Elegant designs for your space",
-            gradient: "linear-gradient(to bottom, #e0c3fc, #fff)",
-            titleColor: "#9d7cd8",
-            buttonColor: "#9d7cd8"
-        },
-        {
-            image: "/images/card-3.jpg",
-            title: "Mint Whisper",
-            description: "Fresh and calming aesthetics",
-            gradient: "linear-gradient(to bottom, #b5ead7, #fff)",
-            titleColor: "#5bae9e",
-            buttonColor: "#5bae9e"
-        }
+      {
+        image: "/images/card-1.jpg",
+        title: "วัดพระสิงห์วรมหาวิหาร",
+        description: "พระพุทธรูปศักดิ์สิทธิ์คู่เมืองเชียงใหม่",
+        gradient: "linear-gradient(to bottom, #ffe6f2, #fff)",
+        titleColor: "#d291bc",
+        buttonColor: "#d291bc",
+      },
+      {
+        image: "/images/card-2.jpg",
+        title: "พระบรมราชานุสาวรีย์สามกษัตริย์",
+        description:
+          "พระบรมราชานุสาวรีย์ของพระมหากษัตริย์สามพระองค์ผู้สร้างเวียงเชียงใหม่",
+        gradient: "linear-gradient(to bottom, #e0c3fc, #fff)",
+        titleColor: "#9d7cd8",
+        buttonColor: "#9d7cd8",
+      },
+      {
+        image: "/images/f7.jpg",
+        title: "ผาช่อ",
+        description:
+          "การเปลี่ยนแปลงทางธรณีวิทยา ซึ่งเป็นทางเดินของสายน้ำปิงเมื่อหลายพันปีมาแล้ว",
+        gradient: "linear-gradient(to bottom, #b5ead7, #fff)",
+        titleColor: "#5bae9e",
+        buttonColor: "#5bae9e",
+      },
     ];
     
     return (
