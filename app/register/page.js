@@ -1,50 +1,48 @@
-'use client';
-import { useState } from 'react';
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 export default function Register() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-    title: '',
-    firstName: '',
-    lastName: '',
-    address: '',
-    gender: '',
-    birthDate: '',
-    acceptTerms: false
+    username: "",
+    password: "",
+    title: "",
+    firstName: "",
+    lastName: "",
+    address: "",
+    gender: "",
+    birthDate: "",
+    acceptTerms: false,
   });
 
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
 
   const titleOptions = [
-    { value: '', label: 'เลือกคำนำหน้า' },
-    { value: 'mr', label: 'นาย' },
-    { value: 'mrs', label: 'นาง' },
-    { value: 'miss', label: 'นางสาว' },
-    { value: 'dr', label: 'ดร.' },
-    { value: 'prof', label: 'ศาสตราจารย์' }
+    { value: "", label: "เลือกคำนำหน้า" },
+    { value: "นาย", label: "นาย" },
+    { value: "นาง", label: "นาง" },
+    { value: "นางสาว", label: "นางสาว" },
+    { value: "ดร.", label: "ดร." },
+    { value: "ศาสตราจารย์", label: "ศาสตราจารย์" },
   ];
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
 
-    // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: false
-      }));
+      setErrors((prev) => ({ ...prev, [name]: false }));
     }
   };
 
   const validateForm = () => {
     const newErrors = {};
-
     if (!formData.username.trim()) newErrors.username = true;
     if (!formData.password.trim()) newErrors.password = true;
     if (!formData.title) newErrors.title = true;
@@ -59,339 +57,280 @@ export default function Register() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitted(true);
-    
-    if (validateForm()) {
-      alert('สมัครสมาชิกสำเร็จ!');
-      console.log('Form data:', formData);
-      // Reset form
-      setFormData({
-        username: '',
-        password: '',
-        title: '',
-        firstName: '',
-        lastName: '',
-        address: '',
-        gender: '',
-        birthDate: '',
-        acceptTerms: false
+
+    if (!validateForm()) return;
+
+    try {
+      const res = await fetch("http://itdev.cmtc.ac.th:3000/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password,
+          firstname: formData.title,
+          fullname: formData.firstName,
+          lastname: formData.lastName,
+          // คุณสามารถเพิ่ม field address, gender, birthDate ได้ใน backend
+        }),
       });
-      setSubmitted(false);
-      setErrors({});
+
+      const result = await res.json();
+
+      if (res.ok) {
+        Swal.fire({
+          icon: "success",
+          title: "สมัครสมาชิกสำเร็จ!",
+          text: "ข้อมูลถูกบันทึกเรียบร้อยแล้ว",
+          timer: 2000,
+          showConfirmButton: false,
+        }).then(() => {
+          router.push("/login");
+        });
+
+        setFormData({
+          username: "",
+          password: "",
+          title: "",
+          firstName: "",
+          lastName: "",
+          address: "",
+          gender: "",
+          birthDate: "",
+          acceptTerms: false,
+        });
+        setSubmitted(false);
+        setErrors({});
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "เกิดข้อผิดพลาด",
+          text: result.message || "ไม่สามารถสมัครสมาชิกได้",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "ข้อผิดพลาดของระบบ",
+        text: "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้",
+      });
+      console.error(error);
     }
   };
 
-  const getInputClassName = (fieldName) => {
-    const baseClass = "form-control";
-    if (submitted && errors[fieldName]) {
-      return `${baseClass} border-danger`;
-    }
-    return baseClass;
-  };
+  const getInputClassName = (field) =>
+    submitted && errors[field] ? "form-control border-danger" : "form-control";
 
-  const getSelectClassName = (fieldName) => {
-    const baseClass = "form-select";
-    if (submitted && errors[fieldName]) {
-      return `${baseClass} border-danger`;
-    }
-    return baseClass;
-  };
+  const getSelectClassName = (field) =>
+    submitted && errors[field] ? "form-select border-danger" : "form-select";
 
   return (
     <div className="container my-5">
-      <div className="row justify-content-center ">
-        <div className="col-lg-8 col-xl-6 mx-5">
-          <div className="card border-0 shadow-lg rounded-4 ">
+      <div className="row justify-content-center">
+        <div className="col-lg-8 col-xl-6">
+          <div className="card border-0 shadow-lg rounded-4">
             <div className="card-body p-5">
-              {/* Header */}
               <div className="text-center mb-4">
-                <h2 className="fw-bold mb-3" style={{ color: '#ff85a2' }}>
-                  <i className="bi bi-person-plus-fill me-2"></i>
+                <h2 className="fw-bold mb-3" style={{ color: "#ff85a2" }}>
                   สมัครสมาชิก
                 </h2>
-                <p className="text-muted">กรอกข้อมูลเพื่อสร้างบัญชีใหม่</p>
               </div>
 
-              <div onSubmit={handleSubmit}>
-                {/* Username */}
+              <form onSubmit={handleSubmit}>
+                {/* Username & Password */}
                 <div className="mb-3">
-                  <label htmlFor="username" className="form-label fw-semibold">
-                    ชื่อผู้ใช้ <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label fw-semibold">ชื่อผู้ใช้ *</label>
                   <input
-                    type="text"
-                    id="username"
                     name="username"
+                    className={getInputClassName("username")}
                     value={formData.username}
                     onChange={handleInputChange}
-                    className={getInputClassName('username')}
-                    placeholder="กรอกชื่อผู้ใช้"
+                    placeholder="ชื่อผู้ใช้"
                   />
                   {submitted && errors.username && (
-                    <div className="text-danger small mt-1">
-                      <i className="bi bi-exclamation-circle me-1"></i>
-                      กรุณากรอกชื่อผู้ใช้
-                    </div>
+                    <div className="text-danger small">กรุณากรอกชื่อผู้ใช้</div>
                   )}
                 </div>
 
-                {/* Password */}
                 <div className="mb-3">
-                  <label htmlFor="password" className="form-label fw-semibold">
-                    รหัสผ่าน <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label fw-semibold">รหัสผ่าน *</label>
                   <input
                     type="password"
-                    id="password"
                     name="password"
+                    className={getInputClassName("password")}
                     value={formData.password}
                     onChange={handleInputChange}
-                    className={getInputClassName('password')}
-                    placeholder="กรอกรหัสผ่าน"
+                    placeholder="รหัสผ่าน"
                   />
                   {submitted && errors.password && (
-                    <div className="text-danger small mt-1">
-                      <i className="bi bi-exclamation-circle me-1"></i>
-                      กรุณากรอกรหัสผ่าน
-                    </div>
+                    <div className="text-danger small">กรุณากรอกรหัสผ่าน</div>
                   )}
                 </div>
 
                 {/* Title */}
                 <div className="mb-3">
-                  <label htmlFor="title" className="form-label fw-semibold">
-                    คำนำหน้าชื่อ <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label fw-semibold">คำนำหน้า *</label>
                   <select
-                    id="title"
                     name="title"
+                    className={getSelectClassName("title")}
                     value={formData.title}
                     onChange={handleInputChange}
-                    className={getSelectClassName('title')}
                   >
-                    {titleOptions.map(option => (
+                    {titleOptions.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
                       </option>
                     ))}
                   </select>
                   {submitted && errors.title && (
-                    <div className="text-danger small mt-1">
-                      <i className="bi bi-exclamation-circle me-1"></i>
-                      กรุณาเลือกคำนำหน้าชื่อ
-                    </div>
+                    <div className="text-danger small">กรุณาเลือกคำนำหน้า</div>
                   )}
                 </div>
 
-                {/* First Name & Last Name */}
+                {/* First & Last Name */}
                 <div className="row">
                   <div className="col-md-6 mb-3">
-                    <label htmlFor="firstName" className="form-label fw-semibold">
-                      ชื่อ <span className="text-danger">*</span>
-                    </label>
+                    <label className="form-label fw-semibold">ชื่อ *</label>
                     <input
-                      type="text"
-                      id="firstName"
                       name="firstName"
+                      className={getInputClassName("firstName")}
                       value={formData.firstName}
                       onChange={handleInputChange}
-                      className={getInputClassName('firstName')}
-                      placeholder="กรอกชื่อ"
+                      placeholder="ชื่อจริง"
                     />
                     {submitted && errors.firstName && (
-                      <div className="text-danger small mt-1">
-                        <i className="bi bi-exclamation-circle me-1"></i>
-                        กรุณากรอกชื่อ
-                      </div>
+                      <div className="text-danger small">กรุณากรอกชื่อ</div>
                     )}
                   </div>
+
                   <div className="col-md-6 mb-3">
-                    <label htmlFor="lastName" className="form-label fw-semibold">
-                      นามสกุล <span className="text-danger">*</span>
-                    </label>
+                    <label className="form-label fw-semibold">นามสกุล *</label>
                     <input
-                      type="text"
-                      id="lastName"
                       name="lastName"
+                      className={getInputClassName("lastName")}
                       value={formData.lastName}
                       onChange={handleInputChange}
-                      className={getInputClassName('lastName')}
-                      placeholder="กรอกนามสกุล"
+                      placeholder="นามสกุล"
                     />
                     {submitted && errors.lastName && (
-                      <div className="text-danger small mt-1">
-                        <i className="bi bi-exclamation-circle me-1"></i>
-                        กรุณากรอกนามสกุล
-                      </div>
+                      <div className="text-danger small">กรุณากรอกนามสกุล</div>
                     )}
                   </div>
                 </div>
 
                 {/* Address */}
                 <div className="mb-3">
-                  <label htmlFor="address" className="form-label fw-semibold">
-                    ที่อยู่ <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label fw-semibold">ที่อยู่ *</label>
                   <textarea
-                    id="address"
                     name="address"
+                    className={getInputClassName("address")}
                     value={formData.address}
                     onChange={handleInputChange}
-                    className={getInputClassName('address')}
                     rows="3"
-                    placeholder="กรอกที่อยู่"
-                  ></textarea>
+                  />
                   {submitted && errors.address && (
-                    <div className="text-danger small mt-1">
-                      <i className="bi bi-exclamation-circle me-1"></i>
-                      กรุณากรอกที่อยู่
-                    </div>
+                    <div className="text-danger small">กรุณากรอกที่อยู่</div>
                   )}
                 </div>
 
                 {/* Gender */}
                 <div className="mb-3">
-                  <label className="form-label fw-semibold">
-                    เพศ <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label fw-semibold">เพศ *</label>
                   <div className="d-flex gap-4 mt-2">
-                    <div className="form-check">
-                      <input
-                        type="radio"
-                        id="male"
-                        name="gender"
-                        value="male"
-                        checked={formData.gender === 'male'}
-                        onChange={handleInputChange}
-                        className="form-check-input"
-                      />
-                      <label htmlFor="male" className="form-check-label">
-                        <i className="bi bi-person me-1"></i>
-                        ชาย
-                      </label>
-                    </div>
-                    <div className="form-check">
-                      <input
-                        type="radio"
-                        id="female"
-                        name="gender"
-                        value="female"
-                        checked={formData.gender === 'female'}
-                        onChange={handleInputChange}
-                        className="form-check-input"
-                      />
-                      <label htmlFor="female" className="form-check-label">
-                        <i className="bi bi-person-dress me-1"></i>
-                        หญิง
-                      </label>
-                    </div>
-                    <div className="form-check">
-                      <input
-                        type="radio"
-                        id="other"
-                        name="gender"
-                        value="other"
-                        checked={formData.gender === 'other'}
-                        onChange={handleInputChange}
-                        className="form-check-input"
-                      />
-                      <label htmlFor="other" className="form-check-label">
-                        <i className="bi bi-person-fill me-1"></i>
-                        อื่นๆ
-                      </label>
-                    </div>
+                    {["male", "female", "other"].map((g) => (
+                      <div className="form-check" key={g}>
+                        <input
+                          type="radio"
+                          id={g}
+                          name="gender"
+                          value={g}
+                          checked={formData.gender === g}
+                          onChange={handleInputChange}
+                          className="form-check-input"
+                        />
+                        <label htmlFor={g} className="form-check-label">
+                          {g === "male"
+                            ? "ชาย"
+                            : g === "female"
+                            ? "หญิง"
+                            : "อื่นๆ"}
+                        </label>
+                      </div>
+                    ))}
                   </div>
                   {submitted && errors.gender && (
-                    <div className="text-danger small mt-1">
-                      <i className="bi bi-exclamation-circle me-1"></i>
-                      กรุณาเลือกเพศ
-                    </div>
+                    <div className="text-danger small">กรุณาเลือกเพศ</div>
                   )}
                 </div>
 
                 {/* Birth Date */}
                 <div className="mb-3">
-                  <label htmlFor="birthDate" className="form-label fw-semibold">
-                    วันเกิด <span className="text-danger">*</span>
-                  </label>
+                  <label className="form-label fw-semibold">วันเกิด *</label>
                   <input
                     type="date"
-                    id="birthDate"
                     name="birthDate"
+                    className={getInputClassName("birthDate")}
                     value={formData.birthDate}
                     onChange={handleInputChange}
-                    className={getInputClassName('birthDate')}
                   />
                   {submitted && errors.birthDate && (
-                    <div className="text-danger small mt-1">
-                      <i className="bi bi-exclamation-circle me-1"></i>
-                      กรุณาเลือกวันเกิด
-                    </div>
+                    <div className="text-danger small">กรุณาเลือกวันเกิด</div>
                   )}
                 </div>
 
-                {/* Terms and Conditions */}
-                <div className="mb-4">
-                  <div className="form-check">
-                    <input
-                      type="checkbox"
-                      id="acceptTerms"
-                      name="acceptTerms"
-                      checked={formData.acceptTerms}
-                      onChange={handleInputChange}
-                      className="form-check-input"
-                    />
-                    <label htmlFor="acceptTerms" className="form-check-label">
-                      ยอมรับ
-                      <a href="#" className="text-decoration-none ms-1" style={{ color: '#ff85a2' }}>
-                        ข้อตกลงและเงื่อนไข
-                      </a>
-                      <span className="text-danger ms-1">*</span>
-                    </label>
-                  </div>
+                {/* Terms */}
+                <div className="mb-4 form-check">
+                  <input
+                    type="checkbox"
+                    name="acceptTerms"
+                    checked={formData.acceptTerms}
+                    onChange={handleInputChange}
+                    className="form-check-input"
+                    id="acceptTerms"
+                  />
+                  <label htmlFor="acceptTerms" className="form-check-label">
+                    ยอมรับ{" "}
+                    <a href="#" className="text-decoration-none ms-1">
+                      ข้อตกลงและเงื่อนไข
+                    </a>{" "}
+                    <span className="text-danger">*</span>
+                  </label>
                   {submitted && errors.acceptTerms && (
-                    <div className="text-danger small mt-1">
-                      <i className="bi bi-exclamation-circle me-1"></i>
-                      กรุณายอมรับข้อตกลงและเงื่อนไข
-                    </div>
+                    <div className="text-danger small">กรุณายอมรับข้อตกลง</div>
                   )}
                 </div>
 
-                {/* Submit Button */}
+                {/* Submit */}
                 <div className="d-grid">
                   <button
                     type="submit"
                     className="btn btn-lg py-3"
-                    style={{ 
-                      background: 'linear-gradient(135deg, #ff85a2, #ff6b8a)',
-                      border: 'none',
-                      borderRadius: '12px',
-                      color: 'white',
-                      fontWeight: '600',
-                      transition: 'all 0.3s ease'
-                    }}
-                    onMouseOver={(e) => {
-                      e.target.style.transform = 'translateY(-2px)';
-                      e.target.style.boxShadow = '0 8px 20px rgba(255, 133, 162, 0.3)';
-                    }}
-                    onMouseOut={(e) => {
-                      e.target.style.transform = 'translateY(0)';
-                      e.target.style.boxShadow = 'none';
+                    style={{
+                      background: "linear-gradient(135deg, #ff85a2, #ff6b8a)",
+                      border: "none",
+                      borderRadius: "12px",
+                      color: "white",
+                      fontWeight: "600",
                     }}
                   >
-                    <i className="bi bi-person-check me-2"></i>
                     สมัครสมาชิก
                   </button>
                 </div>
-              </div>
+              </form>
 
-              {/* Footer */}
               <div className="text-center mt-4">
                 <p className="text-muted">
-                  มีบัญชีอยู่แล้ว? 
-                  <a href="#" className="text-decoration-none ms-1" style={{ color: '#ff85a2' }}>
+                  มีบัญชีอยู่แล้ว?
+                  <a
+                    href="/login"
+                    className="ms-1"
+                    style={{ color: "#ff85a2" }}
+                  >
                     เข้าสู่ระบบ
                   </a>
                 </p>
