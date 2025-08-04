@@ -1,9 +1,9 @@
-'use client';
-import Image from 'next/image';
-import { useState } from 'react';
+"use client";
+import Image from "next/image";
+import { useState } from "react";
 
 export default function About() {
-  const [activeTab, setActiveTab] = useState('story');
+  const [activeTab, setActiveTab] = useState("story");
 
   // ข้อมูลส่วนตัว
   const personalInfo = {
@@ -12,20 +12,57 @@ export default function About() {
     role: "Travel Guide & Blogger",
     bio: "ฉันเป็นนักเดินทางและไกด์ท่องเที่ยวที่หลงใหลในการค้นพบสถานที่ใหม่ๆ ด้วยประสบการณ์กว่า 5 ปีในวงการท่องเที่ยว ฉันมุ่งมั่นที่จะแนะนำสถานที่ท่องเที่ยวที่ผสมผสานความทันสมัยและวัฒนธรรมไทยเข้าด้วยกัน",
     quote: "การเดินทางคือการเรียนรู้ที่ไม่มีวันสิ้นสุด",
-    skills: ["Tour Planning", "Local Culture Expert", "Photography", "Travel Writing", "Sustainable Tourism"],
+    skills: [
+      "Tour Planning",
+      "Local Culture Expert",
+      "Photography",
+      "Travel Writing",
+      "Sustainable Tourism",
+    ],
     education: [
-      { degree: "ระดับประกาศนียบัตรวิชาชีพชั้นสูง", school: "วิทยาลัยเทคนิคเชียงใหม่", year: "2568-Present" },
-      { degree: "ระดับประกาศนียบัตรวิชาชีพ", school: "วิทยาลัยเทคโนโลยีพายัพและบริหารธุรกิจ", year: "2565-2567" }
+      {
+        degree: "ระดับประกาศนียบัตรวิชาชีพชั้นสูง",
+        school: "วิทยาลัยเทคนิคเชียงใหม่",
+        year: "2568-Present",
+      },
+      {
+        degree: "ระดับประกาศนียบัตรวิชาชีพ",
+        school: "วิทยาลัยเทคโนโลยีพายัพและบริหารธุรกิจ",
+        year: "2565-2567",
+      },
     ],
     experience: [
-      { position: "ไกด์นำเที่ยวอิสระ", company: "Amazing Thailand Tours", year: "2565-ปัจจุบัน" },
-      { position: "ผู้ช่วยวางแผนทัวร์", company: "Discover Thailand", year: "2564-2565" }
+      {
+        position: "ไกด์นำเที่ยวอิสระ",
+        company: "Amazing Thailand Tours",
+        year: "2565-ปัจจุบัน",
+      },
+      {
+        position: "ผู้ช่วยวางแผนทัวร์",
+        company: "Discover Thailand",
+        year: "2564-2565",
+      },
     ],
     socialMedia: [
-      { platform: "Instagram", handle: "@fah_travels", icon: "bi-instagram" },
-      { platform: "YouTube", handle: "Fah's Journey", icon: "bi-youtube" },
-      { platform: "Facebook", handle: "ท่องเที่ยวกับฟ้าใส", icon: "bi-facebook" }
-    ]
+      {
+        platform: "Instagram",
+        handle: "@fah_travels",
+        icon: "bi-instagram",
+        href: "https://www.instagram.com/fasai_sudakaew",
+      },
+      {
+        platform: "YouTube",
+        handle: "Fah's Journey",
+        icon: "bi-youtube ",
+        href: "https://www.youtube.com/@fasai-uj7qc",
+      },
+      {
+        platform: "Facebook",
+        handle: "ท่องเที่ยวกับฟ้าใส",
+        icon: "bi-facebook",
+        href: "https://www.facebook.com/sudakaew.fasai/",
+      },
+    ],
   };
 
   return (
@@ -76,7 +113,12 @@ export default function About() {
             <p className="lead mb-4">{personalInfo.bio}</p>
             <div className="d-flex gap-3 mb-3">
               {personalInfo.socialMedia.map((social, index) => (
-                <a key={index} href="#" className="text-decoration-none">
+                <a
+                  key={index}
+                  href={social.href}
+                  className="text-decoration-none"
+                  target="_blank"
+                >
                   <div
                     style={{
                       width: "45px",

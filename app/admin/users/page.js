@@ -8,7 +8,12 @@ export default function Page() {
   useEffect(() => {
     async function getUsers() {
       try {
-        const res = await fetch("http://itdev.cmtc.ac.th:3000/api/users");
+        const res = await fetch("/api/users", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         if (!res.ok) {
           console.error("Failed to fetch data");
           return;
