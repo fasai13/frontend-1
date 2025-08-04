@@ -14,8 +14,8 @@ export default function Navbar() {
     <nav className="navbar navbar-expand-lg shadow-sm sticky-top" style={{background:'#fff'}}>
       <div className="container py-2">
         <Link href="/" className="navbar-brand d-flex align-items-center">
-          <img src="/images/logo.jpg" alt="Logo" width="30" height="30" className="me-2 rounded-circle" />
-          <span style={{color:'#d291bc', fontWeight:'600', fontFamily:'Poppins, sans-serif'}}>Sweet Dreams</span>
+          <img src="/images/f1.jpg" alt="Logo" width="30" height="30" className="me-2 rounded-circle" />
+          <span style={{color:'#d291bc', fontWeight:'600', fontFamily:'Poppins, sans-serif'}}>What The Tour</span>
         </Link>
         
         <button 
