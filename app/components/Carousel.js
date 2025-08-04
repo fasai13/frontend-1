@@ -40,23 +40,23 @@ export default function Carousel() {
   // Carousel captions data
   const captions = [
     {
-      title: "Sweet Dreams Collection",
-      description: "Discover our magical new arrivals!",
-      buttonText: "Shop Now",
-      color: "#ff85a2"
-    },
-    {
-      title: "Summer Vibes",
-      description: "Bright colors for sunny days!",
+      title: "ประตูท่าแพ",
+      description: "จุดเช็คอินสุดฮิตกลางเมือง",
       buttonText: "Explore",
-      color: "#7ec4cf"
+      color: "#ff85a2",
     },
     {
-      title: "Cute & Cozy",
-      description: "Perfect for relaxing at home",
-      buttonText: "See More",
-      color: "#b892ff"
-    }
+      title: "อุทยานแห่งชาติดอยอินทนนท์",
+      description: "สูงสุดแดนสยาม",
+      buttonText: "Explore",
+      color: "#7ec4cf",
+    },
+    {
+      title: "วัดเจดีย์หลวง",
+      description: "วัดคู่บ้านคู่เมือง",
+      buttonText: "Explore",
+      color: "#b892ff",
+    },
   ];
 
   return (
@@ -125,9 +125,9 @@ export default function Carousel() {
           <div className="carousel-item active">
             <div style={{ position: 'relative' }}>
               <Image 
-                src="/images/carousel-1.jpg" 
+                src="/images/f2.jpg" 
                 className="d-block w-100" 
-                alt="Sweet Dreams Collection" 
+                alt="ประตูท่าแพ" 
                 width={1920} 
                 height={690} 
                 style={{ 
@@ -182,9 +182,9 @@ export default function Carousel() {
           <div className="carousel-item">
             <div style={{ position: 'relative' }}>
               <Image 
-                src="/images/carousel-2.jpg" 
+                src="/images/f3.png" 
                 className="d-block w-100" 
-                alt="Summer Vibes" 
+                alt="อุทยานแห่งชาติดอยอินทนนท์" 
                 width={1920} 
                 height={690} 
                 style={{ 
@@ -238,7 +238,7 @@ export default function Carousel() {
           <div className="carousel-item">
             <div style={{ position: 'relative' }}>
               <Image 
-                src="/images/carousel-3.jpg" 
+                src="/images/f5.jpg" 
                 className="d-block w-100" 
                 alt="Cute & Cozy" 
                 width={1920} 
