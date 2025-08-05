@@ -1,0 +1,69 @@
+/*@import "tailwindcss";*/
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+/* ...existing code... */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+/* ...existing code... */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Prompt, Helvetica, sans-serif;
+}
+
+/* Pastel Theme Custom */
+.pastel-carousel {
+  background: #ffe6f2 !important;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 24px 0 rgba(210,145,188,0.12);
+}
+.pastel-indicator {
+  background-color: #d291bc !important;
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  margin: 0 4px;
+  border: 2px solid #fff0f6;
+}
+.pastel-indicator.active {
+  background-color: #b5ead7 !important;
+  border: 2px solid #d291bc;
+}
+.pastel-arrow .carousel-control-prev-icon,
+.pastel-arrow .carousel-control-next-icon {
+  background-color: #ffb7b2;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px 0 rgba(255,183,178,0.18);
+}
+.pastel-card {
+  box-shadow: 0 4px 24px 0 rgba(210,145,188,0.10);
+  border-radius: 1.5rem !important;
+}
+.pastel-navbar {
+  background: #e0c3fc !important;
+  border-radius: 1.5rem !important;
+  box-shadow: 0 4px 24px 0 rgba(224,195,252,0.10);
+}
+.pastel-footer {
+  background: #ffe6f2 !important;
+  border-radius: 1.5rem !important;
+  box-shadow: 0 4px 24px 0 rgba(210,145,188,0.10);
+}
