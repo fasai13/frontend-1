@@ -237,8 +237,19 @@ export default function Footer() {
                     transition: "color 0.3s",
                   }}
                 >
-                  Admin
+              admin
                 </Link>
+              </li>
+              <li className="mb-2">
+                <Link
+                  href="/admin/users"
+                  className="text-decoration-none"
+                  style={{
+                    color: "#666",
+                    fontSize: "0.9rem",
+                    transition: "color 0.3s",
+                  }}
+                  ></Link>
               </li>
             </ul>
           </div>
