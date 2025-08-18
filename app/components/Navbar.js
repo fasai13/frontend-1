@@ -41,7 +41,7 @@ export default function Navbar() {
               <Link href="/about" className="nav-link" style={{color:'#5bae9e'}}>เกี่ยวกับเรา</Link>
             </li>
             <li className="nav-item dropdown mx-2">
-              <a 
+              <Link 
                 className="nav-link" 
                 href="/service" 
                 role="button" 
@@ -49,7 +49,7 @@ export default function Navbar() {
                 style={{color:'#9d7cd8'}}
               >
                 บริการของเรา
-              </a>
+              </Link>
             </li>
             <li className="nav-item mx-2">
               <Link href="/contact" className="nav-link" style={{color:'#ffb7b2'}}>ติดต่อเรา</Link>

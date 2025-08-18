@@ -229,19 +229,6 @@ export default function Footer() {
               </li>
               <li className="mb-2">
                 <Link
-                  href="/about"
-                  className="text-decoration-none"
-                  style={{
-                    color: "#666",
-                    fontSize: "0.9rem",
-                    transition: "color 0.3s",
-                  }}
-                >
-              admin
-                </Link>
-              </li>
-              <li className="mb-2">
-                <Link
                   href="/admin/users"
                   className="text-decoration-none"
                   style={{
@@ -249,7 +236,10 @@ export default function Footer() {
                     fontSize: "0.9rem",
                     transition: "color 0.3s",
                   }}
-                  ></Link>
+                >
+              
+                </Link>
+           
               </li>
             </ul>
           </div>
@@ -325,13 +315,13 @@ export default function Footer() {
                   <span className="text-muted mx-2">•</span>
                 </li>
                 <li className="list-inline-item">
-                  <a
+                  <Link
                     href="#"
                     className="text-muted text-decoration-none"
                     style={{ fontSize: "0.85rem" }}
                   >
                     Terms of Service
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
