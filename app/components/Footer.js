@@ -24,7 +24,7 @@ export default function Footer() {
                   style={{
                     color: "#d291bc",
                     fontWeight: "600",
-                    fontFamily: "Poppins, sans-serif",
+
                     fontSize: "1.25rem",
                   }}
                 >
@@ -98,7 +98,7 @@ export default function Footer() {
             <h5
               style={{
                 color: "#d291bc",
-                fontFamily: "Poppins, sans-serif",
+
                 fontWeight: "500",
                 fontSize: "1rem",
                 marginBottom: "1.25rem",
@@ -166,7 +166,7 @@ export default function Footer() {
             <h5
               style={{
                 color: "#9d7cd8",
-                fontFamily: "Poppins, sans-serif",
+
                 fontWeight: "500",
                 fontSize: "1rem",
                 marginBottom: "1.25rem",
@@ -248,7 +248,7 @@ export default function Footer() {
             <h5
               style={{
                 color: "#5bae9e",
-                fontFamily: "Poppins, sans-serif",
+
                 fontWeight: "500",
                 fontSize: "1rem",
                 marginBottom: "1.25rem",

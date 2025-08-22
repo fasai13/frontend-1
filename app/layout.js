@@ -1,15 +1,15 @@
-// app/layout.js
 import "./globals.css";
-import { Prompt } from "next/font/google";
+import { Srisakdi } from "next/font/google"; // เปลี่ยนเป็น Srisakdi
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import BootstrapClient from "./components/BootstrapClient";
 
-const prompt = Prompt({
+// กำหนดฟอนต์ Srisakdi แบบตัวหนา
+const srisakdi = Srisakdi({
   subsets: ["thai", "latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["700"], // 700 = ตัวหนา
   display: "swap",
 });
 
@@ -21,7 +21,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="th">
-      <body className={prompt.className}>
+      <body className={srisakdi.className}>
         <Navbar />
         {children}
         <Footer />

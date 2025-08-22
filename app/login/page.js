@@ -1,8 +1,12 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const router = useRouter();
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -13,6 +17,12 @@ export default function Login() {
   const [submitted, setSubmitted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const token = localStorage.getItem("token");
+  if (token) {
+    router.push("/admin/users");
+    return;
+  }
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -20,40 +30,67 @@ export default function Login() {
       [name]: type === "checkbox" ? checked : value,
     }));
 
-    // Clear error when user starts typing
     if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: false,
-      }));
+      setErrors((prev) => ({ ...prev, [name]: false }));
     }
   };
 
   const validateForm = () => {
     const newErrors = {};
-
     if (!formData.username.trim()) newErrors.username = true;
     if (!formData.password.trim()) newErrors.password = true;
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setSubmitted(true);
 
-    if (validateForm()) {
-      alert("เข้าสู่ระบบสำเร็จ!");
-      console.log("Login data:", formData);
-      // Reset form
-      setFormData({
-        username: "",
-        password: "",
-        rememberMe: false,
+    if (!validateForm()) return;
+
+    try {
+      const res = await fetch(
+        "https://backend-nextjs-virid.vercel.app/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: formData.username,
+            password: formData.password,
+          }),
+        }
+      );
+      const data = await res.json();
+
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        Swal.fire({
+          icon: "success",
+          title: "<h3>เข้าสู่ระบบสำเร็จ!</h3>",
+          showConfirmButton: false,
+          timer: 2000,
+        }).then(() => {
+          window.location.href = "/admin/users";
+        });
+      } else {
+        Swal.fire({
+          icon: "warning",
+          title: "<h3>ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</h3>",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      Swal.fire({
+        icon: "error",
+        title: "<h3>เกิดข้อผิดพลาด! โปรดลองอีกครั้ง</h3>",
+        showConfirmButton: false,
+        timer: 2000,
       });
-      setSubmitted(false);
-      setErrors({});
     }
   };
 
@@ -67,7 +104,7 @@ export default function Login() {
 
   return (
     <div
-      className="min-vh-100 align-items-center"
+      className="min-vh-100 d-flex align-items-center"
       style={{
         background:
           "linear-gradient(135deg, rgba(255, 133, 162, 0.1) 0%, rgba(126, 196, 207, 0.1) 50%, rgba(184, 146, 255, 0.1) 100%)",
@@ -103,7 +140,7 @@ export default function Login() {
                   </p>
                 </div>
 
-                <div>
+                <form onSubmit={handleLogin}>
                   {/* Username */}
                   <div className="mb-3">
                     <label
@@ -227,8 +264,7 @@ export default function Login() {
                   {/* Login Button */}
                   <div className="d-grid mb-4">
                     <button
-                      type="button"
-                      onClick={handleSubmit}
+                      type="submit"
                       className="btn btn-lg py-3"
                       style={{
                         background: "linear-gradient(135deg, #ff85a2, #ff6b8a)",
@@ -238,85 +274,76 @@ export default function Login() {
                         fontWeight: "600",
                         transition: "all 0.3s ease",
                       }}
-                      onMouseOver={(e) => {
-                        e.target.style.transform = "translateY(-2px)";
-                        e.target.style.boxShadow =
-                          "0 8px 20px rgba(255, 133, 162, 0.3)";
-                      }}
-                      onMouseOut={(e) => {
-                        e.target.style.transform = "translateY(0)";
-                        e.target.style.boxShadow = "none";
-                      }}
                     >
                       <i className="bi bi-box-arrow-in-right me-2"></i>
                       เข้าสู่ระบบ
                     </button>
                   </div>
+                </form>
 
-                  {/* Divider */}
-                  <div className="position-relative mb-4">
-                    <hr className="text-muted" />
-                    <span
-                      className="position-absolute top-50 start-50 translate-middle px-3 small text-muted"
-                      style={{ backgroundColor: "white" }}
+                {/* Divider */}
+                <div className="position-relative mb-4">
+                  <hr className="text-muted" />
+                  <span
+                    className="position-absolute top-50 start-50 translate-middle px-3 small text-muted"
+                    style={{ backgroundColor: "white" }}
+                  >
+                    หรือ
+                  </span>
+                </div>
+
+                {/* Social Login */}
+                <div className="row g-2 mb-4">
+                  <div className="col-6">
+                    <button
+                      type="button"
+                      className="btn w-100 py-2"
+                      style={{
+                        border: "1px solid #e0e0e0",
+                        borderRadius: "10px",
+                        background: "white",
+                        color: "#333",
+                      }}
                     >
-                      หรือ
-                    </span>
+                      <i
+                        className="bi bi-google me-2"
+                        style={{ color: "#db4437" }}
+                      ></i>
+                      Google
+                    </button>
                   </div>
+                  <div className="col-6">
+                    <button
+                      type="button"
+                      className="btn w-100 py-2"
+                      style={{
+                        border: "1px solid #e0e0e0",
+                        borderRadius: "10px",
+                        background: "white",
+                        color: "#333",
+                      }}
+                    >
+                      <i
+                        className="bi bi-facebook me-2"
+                        style={{ color: "#4267B2" }}
+                      ></i>
+                      Facebook
+                    </button>
+                  </div>
+                </div>
 
-                  {/* Social Login */}
-                  <div className="row g-2 mb-4">
-                    <div className="col-6">
-                      <button
-                        type="button"
-                        className="btn w-100 py-2"
-                        style={{
-                          border: "1px solid #e0e0e0",
-                          borderRadius: "10px",
-                          background: "white",
-                          color: "#333",
-                        }}
-                      >
-                        <i
-                          className="bi bi-google me-2"
-                          style={{ color: "#db4437" }}
-                        ></i>
-                        Google
-                      </button>
-                    </div>
-                    <div className="col-6">
-                      <button
-                        type="button"
-                        className="btn w-100 py-2"
-                        style={{
-                          border: "1px solid #e0e0e0",
-                          borderRadius: "10px",
-                          background: "white",
-                          color: "#333",
-                        }}
-                      >
-                        <i
-                          className="bi bi-facebook me-2"
-                          style={{ color: "#4267B2" }}
-                        ></i>
-                        Facebook
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Register Link */}
-                  <div className="text-center">
-                    <p className="text-muted mb-0">
-                      ยังไม่มีบัญชี?
-                      <a
-                        href="#"
-                        className="text-decoration-none fw-semibold ms-1"
-                        style={{ color: "#ff85a2" }}
-                      >
-                        สมัครสมาชิกเลย
-                      </a>
-                    </p>
-                  </div>
+                {/* Register Link */}
+                <div className="text-center">
+                  <p className="text-muted mb-0">
+                    ยังไม่มีบัญชี?
+                    <Link
+                      href="#"
+                      className="text-decoration-none fw-semibold ms-1"
+                      style={{ color: "#ff85a2" }}
+                    >
+                      สมัครสมาชิกเลย
+                    </Link>
+                  </p>
                 </div>
               </div>
             </div>

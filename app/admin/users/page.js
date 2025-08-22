@@ -8,12 +8,18 @@ export default function Page() {
   const [showModal, setShowModal] = useState(false);
   const [editUser, setEditUser] = useState(null);
 
+  const token = localStorage.getItem("token");
+  if (!token) {
+    router.push("/login");
+    return;
+  }
+
+  // Fetch users
   const getUsers = async () => {
     try {
-      const res = await fetch("/api/users", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch(
+        "https://backend-nextjs-virid.vercel.app/api/users"
+      );
       if (!res.ok) {
         console.error("Failed to fetch data");
         return;
@@ -27,7 +33,7 @@ export default function Page() {
 
   useEffect(() => {
     getUsers();
-    const interval = setInterval(getUsers, 1000);
+    const interval = setInterval(getUsers, 1000); // refresh every second
     return () => clearInterval(interval);
   }, []);
 
@@ -54,24 +60,23 @@ export default function Page() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(
-            `http://itdev.cmtc.ac.th:3000/api/users/${id}`,
-            { method: "DELETE" }
+          const res = await fetch(
+            `https://backend-nextjs-virid.vercel.app/api/users/${id}`,
+            {
+              method: "DELETE",
+            }
           );
 
-          if (response.ok) {
-            Swal.fire({
-              icon: "success",
-              title: "ลบสำเร็จ!",
-              text: "ลบข้อมูลผู้ใช้เรียบร้อยแล้ว",
-              confirmButtonColor: "#4e73df",
-            });
-            getUsers();
-          } else {
-            throw new Error("Failed to delete user");
-          }
-        } catch (error) {
-          console.error("Error deleting user:", error);
+          if (!res.ok) throw new Error("Failed to delete user");
+
+          Swal.fire({
+            icon: "success",
+            title: "ลบสำเร็จ!",
+            confirmButtonColor: "#4e73df",
+          });
+          getUsers();
+        } catch (err) {
+          console.error(err);
           Swal.fire({
             icon: "error",
             title: "เกิดข้อผิดพลาด",
@@ -87,11 +92,14 @@ export default function Page() {
     if (!editUser) return;
 
     try {
-      const res = await fetch("/api/users", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editUser),
-      });
+      const res = await fetch(
+        `https://backend-nextjs-virid.vercel.app/api/users`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(editUser), // editUser ต้องมี id อยู่แล้ว
+        }
+      );
 
       if (!res.ok) throw new Error("Failed to update user");
 
@@ -103,8 +111,8 @@ export default function Page() {
 
       closeModal();
       getUsers();
-    } catch (error) {
-      console.error("Error updating user:", error);
+    } catch (err) {
+      console.error(err);
       Swal.fire({
         icon: "error",
         title: "เกิดข้อผิดพลาด",
@@ -116,7 +124,7 @@ export default function Page() {
 
   return (
     <>
-      <div className="container">
+      <div className="container my-4">
         <div className="card">
           <div className="card-header">Users List</div>
           <div className="card-body">
@@ -138,7 +146,7 @@ export default function Page() {
               <tbody>
                 {items.length === 0 ? (
                   <tr>
-                    <td colSpan="10" className="text-center">
+                    <td colSpan={10} className="text-center">
                       กำลังโหลดข้อมูล...
                     </td>
                   </tr>
@@ -166,7 +174,7 @@ export default function Page() {
                           className="btn btn-danger btn-sm"
                           onClick={() => handleDelete(item.id)}
                         >
-                          <i className="fa fa-trash"></i> ลบ
+                          ลบ
                         </button>
                       </td>
                     </tr>
@@ -179,78 +187,41 @@ export default function Page() {
       </div>
 
       {/* Modal */}
-      {showModal && (
+      {showModal && editUser && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h5>แก้ไขผู้ใช้: {editUser?.firstname}</h5>
+            <h5>แก้ไขผู้ใช้: {editUser.firstname}</h5>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
                 handleSave();
               }}
             >
-              <div className="mb-3">
-                <label>Firstname</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={editUser.firstname}
-                  onChange={(e) =>
-                    setEditUser({ ...editUser, firstname: e.target.value })
-                  }
-                />
-              </div>
+              {[
+                "firstname",
+                "fullname",
+                "lastname",
+                "username",
+                "address",
+                "birthday",
+              ].map((field) => (
+                <div className="mb-3" key={field}>
+                  <label className="form-label">
+                    {field.charAt(0).toUpperCase() + field.slice(1)}
+                  </label>
+                  <input
+                    type={field === "birthday" ? "date" : "text"}
+                    className="form-control"
+                    value={editUser[field]}
+                    onChange={(e) =>
+                      setEditUser({ ...editUser, [field]: e.target.value })
+                    }
+                  />
+                </div>
+              ))}
 
               <div className="mb-3">
-                <label>Fullname</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={editUser.fullname}
-                  onChange={(e) =>
-                    setEditUser({ ...editUser, fullname: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="mb-3">
-                <label>Lastname</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={editUser.lastname}
-                  onChange={(e) =>
-                    setEditUser({ ...editUser, lastname: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="mb-3">
-                <label>Username</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={editUser.username}
-                  onChange={(e) =>
-                    setEditUser({ ...editUser, username: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="mb-3">
-                <label>Address</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  value={editUser.address}
-                  onChange={(e) =>
-                    setEditUser({ ...editUser, address: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="mb-3">
-                <label>Sex</label>
+                <label className="form-label">Sex</label>
                 <select
                   className="form-control"
                   value={editUser.sex}
@@ -263,18 +234,6 @@ export default function Page() {
                   <option value="หญิง">หญิง</option>
                   <option value="อื่นๆ">อื่นๆ</option>
                 </select>
-              </div>
-
-              <div className="mb-3">
-                <label>Birthday</label>
-                <input
-                  type="date"
-                  className="form-control"
-                  value={editUser.birthday}
-                  onChange={(e) =>
-                    setEditUser({ ...editUser, birthday: e.target.value })
-                  }
-                />
               </div>
 
               <div className="text-end">
@@ -297,10 +256,7 @@ export default function Page() {
       <style jsx>{`
         .modal-overlay {
           position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
+          inset: 0;
           background: rgba(0, 0, 0, 0.5);
           display: flex;
           justify-content: center;

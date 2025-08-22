@@ -20,6 +20,12 @@ export default function Register() {
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
 
+  const token = localStorage.getItem("token");
+  if (token) {
+    router.push("/admin/users");
+    return;
+  }
+
   const titleOptions = [
     { value: "", label: "เลือกคำนำหน้า" },
     { value: "นาย", label: "นาย" },
@@ -64,23 +70,26 @@ export default function Register() {
     if (!validateForm()) return;
 
     try {
-      const res = await fetch("http://itdev.cmtc.ac.th:3000/api/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          username: formData.username,
-          password: formData.password,
-          firstname: formData.title,
-          fullname: formData.firstName,
-          lastname: formData.lastName,
-          address: formData.address,
-          sex: formData.gender,
-          birthday: formData.birthDate,
-        }),
-      });
+      const res = await fetch(
+        "https://backend-nextjs-virid.vercel.app/api/users",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            username: formData.username,
+            password: formData.password,
+            firstname: formData.title,
+            fullname: formData.firstName,
+            lastname: formData.lastName,
+            address: formData.address,
+            sex: formData.gender,
+            birthday: formData.birthDate,
+          }),
+        }
+      );
 
       const result = await res.json();
 

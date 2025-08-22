@@ -44,7 +44,7 @@ export default function Card(){
     
     return (
         <div className="container my-5">
-            <h3 className="mb-4 text-center" style={{color:'#d291bc', fontWeight:'600', fontFamily:'Poppins, sans-serif'}}>Our Collection</h3>
+            <h3 className="mb-4 text-center" style={{color:'#d291bc', fontWeight:'600',}}>Our Collection</h3>
             <div className="row g-4 justify-content-center">
                 {cards.map((card, index) => (
                     <div className="col-md-4 mb-4" key={index}>
@@ -89,7 +89,7 @@ export default function Card(){
                                     padding: '1.5rem 1rem'
                                 }}
                             >
-                                <h5 style={{color: card.titleColor, fontFamily:'Poppins, sans-serif', fontWeight: '500', marginBottom: '0.5rem'}}>
+                                <h5 style={{color: card.titleColor,  fontWeight: '500', marginBottom: '0.5rem'}}>
                                     {card.title}
                                 </h5>
                                 <p className="card-text" style={{color:'#888', fontSize: '0.9rem', marginBottom: '1rem'}}>
