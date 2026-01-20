@@ -17,11 +17,17 @@ export default function Login() {
   const [submitted, setSubmitted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const token = localStorage.getItem("token");
-  if (token) {
-    router.push("/admin/users");
-    return;
-  }
+  // --- ใส่ส่วนนี้แทน ---
+  useEffect(() => {
+    // เช็คว่าอยู่ใน browser หรือไม่ และมี token ไหม
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      if (token) {
+        router.push("/admin/users");
+      }
+    }
+  }, [router]);
+  // -----------------
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -48,7 +54,7 @@ export default function Login() {
     setSubmitted(true);
 
     if (!validateForm()) return;
-    const token = localStorage.getItem("token");
+
     try {
       const res = await fetch(
         "https://backend-five-phi-64.vercel.app/api/auth/login",
