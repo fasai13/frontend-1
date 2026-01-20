@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react"; // 1. เพิ่ม useEffect
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
@@ -20,11 +20,13 @@ export default function Register() {
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
 
-  const token = localStorage.getItem("token");
-  if (token) {
-    router.push("/admin/users");
-    return;
-  }
+  // 2. ย้ายการเช็ค localStorage มาไว้ใน useEffect
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      router.push("/admin/users");
+    }
+  }, [router]);
 
   const titleOptions = [
     { value: "", label: "เลือกคำนำหน้า" },
@@ -88,7 +90,7 @@ export default function Register() {
             sex: formData.gender,
             birthday: formData.birthDate,
           }),
-        }
+        },
       );
 
       const result = await res.json();
@@ -268,8 +270,8 @@ export default function Register() {
                           {g === "ชาย"
                             ? "ชาย"
                             : g === "หญิง"
-                            ? "หญิง"
-                            : "อื่นๆ"}
+                              ? "หญิง"
+                              : "อื่นๆ"}
                         </label>
                       </div>
                     ))}
