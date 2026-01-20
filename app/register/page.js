@@ -71,7 +71,7 @@ export default function Register() {
 
     try {
       const res = await fetch(
-        "https://backend-nextjs-virid.vercel.app/api/users",
+        "https://backend-five-phi-64.vercel.app/api/auth/register",
         {
           method: "POST",
           headers: {

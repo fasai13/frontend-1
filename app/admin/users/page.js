@@ -17,9 +17,16 @@ export default function Page() {
 
   // Fetch users
   const getUsers = async () => {
+    const token = localStorage.getItem("token"); // ดึง token มาใช้
     try {
       const res = await fetch(
-        "https://backend-nextjs-virid.vercel.app/api/users"
+        "https://backend-five-phi-64.vercel.app/api/users",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // แนบ Bearer Token
+          },
+        },
       );
       if (!res.ok) {
         console.error("Failed to fetch data");
@@ -39,7 +46,12 @@ export default function Page() {
   }, []);
 
   const openEditModal = (user) => {
-    setEditUser(user);
+    // แก้ไขตรงนี้: จัดรูปแบบวันที่ให้เป็น yyyy-MM-dd ก่อนเปิด Modal
+    const formattedUser = {
+      ...user,
+      birthday: user.birthday ? user.birthday.split("T")[0] : "",
+    };
+    setEditUser(formattedUser);
     setShowModal(true);
   };
 
@@ -49,6 +61,8 @@ export default function Page() {
   };
 
   const handleDelete = async (id) => {
+    const token = localStorage.getItem("token"); // ดึง token มาใช้
+
     Swal.fire({
       title: "ยืนยันการลบ?",
       text: "คุณต้องการลบผู้ใช้นี้ใช่หรือไม่?",
@@ -62,10 +76,13 @@ export default function Page() {
       if (result.isConfirmed) {
         try {
           const res = await fetch(
-            `https://backend-nextjs-virid.vercel.app/api/users/${id}`,
+            `https://backend-five-phi-64.vercel.app/api/users/${id}`,
             {
               method: "DELETE",
-            }
+              headers: {
+                Authorization: `Bearer ${token}`, // แนบ Bearer Token
+              },
+            },
           );
           if (!res.ok) throw new Error("Failed to delete user");
           Swal.fire({ icon: "success", title: "ลบสำเร็จ!" });
@@ -84,14 +101,20 @@ export default function Page() {
 
   const handleSave = async () => {
     if (!editUser) return;
+    const token = localStorage.getItem("token"); // ดึง token มาใช้
+
     try {
+      // เปลี่ยน URL ให้ส่ง /api/users/${editUser.id}
       const res = await fetch(
-        "https://backend-nextjs-virid.vercel.app/api/users",
+        `https://backend-five-phi-64.vercel.app/api/users/${editUser.id}`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(editUser),
-        }
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // แนบ Bearer Token
+          },
+          body: JSON.stringify(editUser), // ส่งข้อมูลที่เหลือใน body
+        },
       );
       if (!res.ok) throw new Error("Failed to update user");
 
