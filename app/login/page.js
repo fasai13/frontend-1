@@ -48,7 +48,7 @@ export default function Login() {
     setSubmitted(true);
 
     if (!validateForm()) return;
-
+    const token = localStorage.getItem("token");
     try {
       const res = await fetch(
         "https://backend-five-phi-64.vercel.app/api/auth/login",
@@ -61,7 +61,7 @@ export default function Login() {
             username: formData.username,
             password: formData.password,
           }),
-        }
+        },
       );
       const data = await res.json();
 
