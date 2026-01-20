@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react"; // แก้ไข: เพิ่ม useEffect
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 
@@ -16,18 +16,18 @@ export default function Login() {
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  // เพิ่ม state เพื่อป้องกันการ render form ก่อนเช็ค token เสร็จ (ถ้าต้องการ)
+  const [isChecking, setIsChecking] = useState(true);
 
-  // --- ใส่ส่วนนี้แทน ---
+  // แก้ไข: ย้ายการเช็ค localStorage มาไว้ใน useEffect เพื่อแก้ปัญหา Prerender Error
   useEffect(() => {
-    // เช็คว่าอยู่ใน browser หรือไม่ และมี token ไหม
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("token");
-      if (token) {
-        router.push("/admin/users");
-      }
+    const token = localStorage.getItem("token");
+    if (token) {
+      router.push("/admin/users");
+    } else {
+      setIsChecking(false); // ถ้าไม่มี token ก็ให้แสดงหน้าจอ Login
     }
   }, [router]);
-  // -----------------
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -79,6 +79,8 @@ export default function Login() {
           showConfirmButton: false,
           timer: 2000,
         }).then(() => {
+          // ใช้ router.push แทน window.location เพื่อประสบการณ์ที่ดีกว่าใน Next.js
+          // หรือใช้ window.location.href ถ้าต้องการ refresh state ทั้งหมดจริงๆ
           window.location.href = "/admin/users";
         });
       } else {
@@ -107,6 +109,11 @@ export default function Login() {
     }
     return baseClass;
   };
+
+  // ถ้ากำลังเช็ค token อยู่ ไม่ต้อง render อะไร (ป้องกันหน้า Login กระพริบ)
+  if (isChecking) {
+    return null;
+  }
 
   return (
     <div
